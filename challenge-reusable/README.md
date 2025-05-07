@@ -2,7 +2,7 @@
 도전: 모듈을 만들어서 각기 다른 태그를 가지는 VPC, Subnet, EC2를 생성한다
 
 # 폴더 구조
-
+```bash
 challenge-resuable/ 
 ├── _modules/
     ├── main.tf
@@ -13,6 +13,7 @@ challenge-resuable/
 ├── test-ec2
     ├── terraform.tf
     ├── variables.tf
+``` 
 
 - terraform.tf<br>
     modules{}에 ../modules/variables.tf를 기준으로 속성 값을 입력한다.<br>
