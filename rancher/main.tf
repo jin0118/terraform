@@ -6,7 +6,6 @@ provider "helm" {
   kubernetes {
     config_path = "~/.kube/config"
   }
-
 }
 
 module "rancher" {
@@ -17,6 +16,7 @@ module "rancher" {
     hostname    = "rancher.jindol.com"
     values_yaml = ""
   }
+  ServiceType = "NodePort"
 }
 
  
