@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: "2025-05-11T15:03:40Z"
+  deletionGracePeriodSeconds: 0
+  deletionTimestamp: "2025-05-16T07:12:04Z"
+  labels:
+    kubernetes.io/metadata.name: cattle-system
+  name: cattle-system
+  resourceVersion: "387180"
+  uid: b2187a6a-a9fe-489e-9284-174d5261c8fc
+spec: {}
+status:
+  conditions:
+  - lastTransitionTime: "2025-05-16T07:12:10Z"
+    message: All resources successfully discovered
+    reason: ResourcesDiscovered
+    status: "False"
+    type: NamespaceDeletionDiscoveryFailure
+  - lastTransitionTime: "2025-05-16T07:12:10Z"
+    message: All legacy kube types successfully parsed
+    reason: ParsedGroupVersions
+    status: "False"
+    type: NamespaceDeletionGroupVersionParsingFailure
+  - lastTransitionTime: "2025-05-16T07:12:10Z"
+    message: All content successfully deleted, may be waiting on finalization
+    reason: ContentDeleted
+    status: "False"
+    type: NamespaceDeletionContentFailure
+  - lastTransitionTime: "2025-05-16T07:12:10Z"
+    message: All content successfully removed
+    reason: ContentRemoved
+    status: "False"
+    type: NamespaceContentRemaining
+  - lastTransitionTime: "2025-05-16T07:12:10Z"
+    message: All content-preserving finalizers finished
+    reason: ContentHasNoFinalizers
+    status: "False"
+    type: NamespaceFinalizersRemaining
+  phase: Terminating

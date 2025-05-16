@@ -10,11 +10,13 @@ provider "helm" {
 }
 
 module "rancher" {
-  source = "squareops/rancher/kubernetes"
+  source = "../rancher/terraform/modules/rancher"
   rancher_config = {
     email = "email@email.com"
     # hostname    = "localhost" # Rancher 서버의 도메인 이름
-    hostname    = "rancher"
+    hostname    = "rancher.jindol.com"
     values_yaml = ""
   }
 }
+
+ 

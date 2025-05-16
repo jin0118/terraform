@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"rancher","Source":"registry.terraform.io/squareops/rancher/kubernetes","Version":"2.1.0","Dir":".terraform/modules/rancher"}]}

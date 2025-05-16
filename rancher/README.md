@@ -5,6 +5,10 @@
 ensure CRDs are installed first
 ```
 - [ ] cert-manager 학습 
+    - 참고 자료:
+        - [ 쿠버네티스 cert-manager로 let's encrypt 인증서 발급](https://malwareanalysis.tistory.com/126)
+        - [cert-manager란?](https://www.infograb.net/1a927690-fd7a-489f-beb1-b0dab6c1bbff)
+        - [cert-manager 공식문서](https://cert-manager.io/docs/)
 - [ ] Terraform으로 kind-cluster에 설치
 
 
