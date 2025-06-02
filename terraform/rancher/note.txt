@@ -1,0 +1,2 @@
+# helm chart 정의서 확인
+helm template rancher ./terraform/modules/rancher/helm/chart -f ./terraform/modules/rancher/helm/chart/values.yaml 
