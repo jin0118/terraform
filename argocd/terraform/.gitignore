@@ -1,0 +1,28 @@
+# Terraform state (AWS 계정 정보, 리소스 ID 등 민감 정보 포함)
+*.tfstate
+*.tfstate.backup
+*.tfstate.*.backup
+
+# 로컬 작업 디렉토리
+.terraform/
+
+# Provider lock 파일 (선택적 — 공유 시 포함 가능하나 기본 제외)
+# .terraform.lock.hcl
+
+# 변수 오버라이드 파일 (credentials, 환경별 값 포함 가능)
+*.tfvars
+*.tfvars.json
+
+# 플랜 파일 (민감 정보 포함 가능)
+*.tfplan
+
+# 크래시 로그
+crash.log
+crash.*.log
+
+# 환경 변수 파일
+.env
+.env.*
+
+# macOS
+.DS_Store
