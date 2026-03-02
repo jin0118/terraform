@@ -555,6 +555,8 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: argocd-image-updater
   name: argocd-image-updater-controller
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::097600221977:role/imageupdater-poc-image-updater-ecr-role
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
