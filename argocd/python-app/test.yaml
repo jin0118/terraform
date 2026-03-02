@@ -1,0 +1,275 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argocd-image-updater-controller","control-plane":"argocd-image-updater-controller"},"name":"argocd-image-updater-controller","namespace":"argocd"},"spec":{"replicas":1,"selector":{"matchLabels":{"control-plane":"argocd-image-updater-controller"}},"template":{"metadata":{"annotations":{"kubectl.kubernetes.io/default-container":"argocd-image-updater-controller"},"labels":{"app.kubernetes.io/name":"argocd-image-updater","control-plane":"argocd-image-updater-controller"}},"spec":{"containers":[{"args":["--metrics-bind-address=:8443","run"],"command":["/manager"],"env":[{"name":"ARGOCD_NAMESPACE","valueFrom":{"configMapKeyRef":{"key":"argocd.namespace","name":"argocd-image-updater-config","optional":true}}},{"name":"IMAGE_UPDATER_INTERVAL","valueFrom":{"configMapKeyRef":{"key":"interval","name":"argocd-image-updater-config","optional":true}}},{"name":"IMAGE_UPDATER_LOGLEVEL","valueFrom":{"configMapKeyRef":{"key":"log.level","name":"argocd-image-updater-config","optional":true}}},{"name":"IMAGE_UPDATER_LOGFORMAT","valueFrom":{"configMapKeyRef":{"key":"log.format","name":"argocd-image-updater-config","optional":true}}},{"name":"MAX_CONCURRENT_APPS","valueFrom":{"configMapKeyRef":{"key":"max_concurrent_apps","name":"argocd-image-updater-config","optional":true}}},{"name":"MAX_CONCURRENT_RECONCILES","valueFrom":{"configMapKeyRef":{"key":"max_concurrent_reconciles","name":"argocd-image-updater-config","optional":true}}},{"name":"GIT_COMMIT_USER","valueFrom":{"configMapKeyRef":{"key":"git.user","name":"argocd-image-updater-config","optional":true}}},{"name":"GIT_COMMIT_EMAIL","valueFrom":{"configMapKeyRef":{"key":"git.email","name":"argocd-image-updater-config","optional":true}}},{"name":"GIT_COMMIT_SIGNING_KEY","valueFrom":{"configMapKeyRef":{"key":"git.commit-signing-key","name":"argocd-image-updater-config","optional":true}}},{"name":"GIT_COMMIT_SIGNING_METHOD","valueFrom":{"configMapKeyRef":{"key":"git.commit-signing-method","name":"argocd-image-updater-config","optional":true}}},{"name":"GIT_COMMIT_SIGN_OFF","valueFrom":{"configMapKeyRef":{"key":"git.commit-sign-off","name":"argocd-image-updater-config","optional":true}}},{"name":"IMAGE_UPDATER_KUBE_EVENTS","valueFrom":{"configMapKeyRef":{"key":"kube.events","name":"argocd-image-updater-config","optional":true}}},{"name":"ENABLE_WEBHOOK","valueFrom":{"configMapKeyRef":{"key":"webhook.enable","name":"argocd-image-updater-config","optional":true}}},{"name":"WEBHOOK_PORT","valueFrom":{"configMapKeyRef":{"key":"webhook.port","name":"argocd-image-updater-config","optional":true}}},{"name":"QUAY_WEBHOOK_SECRET","valueFrom":{"secretKeyRef":{"key":"webhook.quay-secret","name":"argocd-image-updater-secret","optional":true}}},{"name":"DOCKER_WEBHOOK_SECRET","valueFrom":{"secretKeyRef":{"key":"webhook.docker-secret","name":"argocd-image-updater-secret","optional":true}}},{"name":"GHCR_WEBHOOK_SECRET","valueFrom":{"secretKeyRef":{"key":"webhook.ghcr-secret","name":"argocd-image-updater-secret","optional":true}}},{"name":"HARBOR_WEBHOOK_SECRET","valueFrom":{"secretKeyRef":{"key":"webhook.harbor-secret","name":"argocd-image-updater-secret","optional":true}}},{"name":"CLOUDEVENTS_WEBHOOK_SECRET","valueFrom":{"secretKeyRef":{"key":"webhook.cloudevents-secret","name":"argocd-image-updater-secret","optional":true}}},{"name":"WEBHOOK_RATELIMIT_ALLOWED","valueFrom":{"configMapKeyRef":{"key":"webhook.ratelimit-allowed","name":"argocd-image-updater-config","optional":true}}}],"image":"quay.io/argoprojlabs/argocd-image-updater:v1.1.1","livenessProbe":{"httpGet":{"path":"/healthz","port":8081},"initialDelaySeconds":15,"periodSeconds":20},"name":"argocd-image-updater-controller","readinessProbe":{"httpGet":{"path":"/readyz","port":8081},"initialDelaySeconds":5,"periodSeconds":10},"resources":{"limits":{"cpu":"500m","memory":"1024Mi"},"requests":{"cpu":"250m","memory":"512Mi"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"seccompProfile":{"type":"RuntimeDefault"}},"volumeMounts":[{"mountPath":"/app/config","name":"image-updater-conf"},{"mountPath":"/app/config/ssh","name":"ssh-known-hosts"},{"mountPath":"/app/.ssh","name":"ssh-config"},{"mountPath":"/tmp","name":"tmp"},{"mountPath":"/app/ssh-keys/id_rsa","name":"ssh-signing-key","readOnly":true,"subPath":"sshPrivateKey"}]}],"securityContext":{"runAsNonRoot":true},"serviceAccountName":"argocd-image-updater-controller","terminationGracePeriodSeconds":10,"volumes":[{"configMap":{"items":[{"key":"registries.conf","path":"registries.conf"},{"key":"git.commit-message-template","path":"commit.template"}],"name":"argocd-image-updater-config","optional":true},"name":"image-updater-conf"},{"configMap":{"name":"argocd-ssh-known-hosts-cm","optional":true},"name":"ssh-known-hosts"},{"configMap":{"name":"argocd-image-updater-ssh-config","optional":true},"name":"ssh-config"},{"name":"ssh-signing-key","secret":{"optional":true,"secretName":"ssh-git-creds"}},{"emptyDir":{},"name":"tmp"}]}}}}
+  creationTimestamp: "2026-03-02T04:38:04Z"
+  generation: 1
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: argocd-image-updater-controller
+    control-plane: argocd-image-updater-controller
+  name: argocd-image-updater-controller
+  namespace: argocd
+  resourceVersion: "30348"
+  uid: 3bc98ade-260a-4b8f-85bf-cad1b958b05b
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      control-plane: argocd-image-updater-controller
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: argocd-image-updater-controller
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/name: argocd-image-updater
+        control-plane: argocd-image-updater-controller
+    spec:
+      containers:
+      - args:
+        - --metrics-bind-address=:8443
+        - run
+        command:
+        - /manager
+        env:
+        - name: ARGOCD_NAMESPACE
+          valueFrom:
+            configMapKeyRef:
+              key: argocd.namespace
+              name: argocd-image-updater-config
+              optional: true
+        - name: IMAGE_UPDATER_INTERVAL
+          valueFrom:
+            configMapKeyRef:
+              key: interval
+              name: argocd-image-updater-config
+              optional: true
+        - name: IMAGE_UPDATER_LOGLEVEL
+          valueFrom:
+            configMapKeyRef:
+              key: log.level
+              name: argocd-image-updater-config
+              optional: true
+        - name: IMAGE_UPDATER_LOGFORMAT
+          valueFrom:
+            configMapKeyRef:
+              key: log.format
+              name: argocd-image-updater-config
+              optional: true
+        - name: MAX_CONCURRENT_APPS
+          valueFrom:
+            configMapKeyRef:
+              key: max_concurrent_apps
+              name: argocd-image-updater-config
+              optional: true
+        - name: MAX_CONCURRENT_RECONCILES
+          valueFrom:
+            configMapKeyRef:
+              key: max_concurrent_reconciles
+              name: argocd-image-updater-config
+              optional: true
+        - name: GIT_COMMIT_USER
+          valueFrom:
+            configMapKeyRef:
+              key: git.user
+              name: argocd-image-updater-config
+              optional: true
+        - name: GIT_COMMIT_EMAIL
+          valueFrom:
+            configMapKeyRef:
+              key: git.email
+              name: argocd-image-updater-config
+              optional: true
+        - name: GIT_COMMIT_SIGNING_KEY
+          valueFrom:
+            configMapKeyRef:
+              key: git.commit-signing-key
+              name: argocd-image-updater-config
+              optional: true
+        - name: GIT_COMMIT_SIGNING_METHOD
+          valueFrom:
+            configMapKeyRef:
+              key: git.commit-signing-method
+              name: argocd-image-updater-config
+              optional: true
+        - name: GIT_COMMIT_SIGN_OFF
+          valueFrom:
+            configMapKeyRef:
+              key: git.commit-sign-off
+              name: argocd-image-updater-config
+              optional: true
+        - name: IMAGE_UPDATER_KUBE_EVENTS
+          valueFrom:
+            configMapKeyRef:
+              key: kube.events
+              name: argocd-image-updater-config
+              optional: true
+        - name: ENABLE_WEBHOOK
+          valueFrom:
+            configMapKeyRef:
+              key: webhook.enable
+              name: argocd-image-updater-config
+              optional: true
+        - name: WEBHOOK_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: webhook.port
+              name: argocd-image-updater-config
+              optional: true
+        - name: QUAY_WEBHOOK_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: webhook.quay-secret
+              name: argocd-image-updater-secret
+              optional: true
+        - name: DOCKER_WEBHOOK_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: webhook.docker-secret
+              name: argocd-image-updater-secret
+              optional: true
+        - name: GHCR_WEBHOOK_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: webhook.ghcr-secret
+              name: argocd-image-updater-secret
+              optional: true
+        - name: HARBOR_WEBHOOK_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: webhook.harbor-secret
+              name: argocd-image-updater-secret
+              optional: true
+        - name: CLOUDEVENTS_WEBHOOK_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: webhook.cloudevents-secret
+              name: argocd-image-updater-secret
+              optional: true
+        - name: WEBHOOK_RATELIMIT_ALLOWED
+          valueFrom:
+            configMapKeyRef:
+              key: webhook.ratelimit-allowed
+              name: argocd-image-updater-config
+              optional: true
+        image: quay.io/argoprojlabs/argocd-image-updater:v1.1.1
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 8081
+            scheme: HTTP
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: argocd-image-updater-controller
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /readyz
+            port: 8081
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1Gi
+          requests:
+            cpu: 250m
+            memory: 512Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /app/config
+          name: image-updater-conf
+        - mountPath: /app/config/ssh
+          name: ssh-known-hosts
+        - mountPath: /app/.ssh
+          name: ssh-config
+        - mountPath: /tmp
+          name: tmp
+        - mountPath: /app/ssh-keys/id_rsa
+          name: ssh-signing-key
+          readOnly: true
+          subPath: sshPrivateKey
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        runAsNonRoot: true
+      serviceAccount: argocd-image-updater-controller
+      serviceAccountName: argocd-image-updater-controller
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: registries.conf
+            path: registries.conf
+          - key: git.commit-message-template
+            path: commit.template
+          name: argocd-image-updater-config
+          optional: true
+        name: image-updater-conf
+      - configMap:
+          defaultMode: 420
+          name: argocd-ssh-known-hosts-cm
+          optional: true
+        name: ssh-known-hosts
+      - configMap:
+          defaultMode: 420
+          name: argocd-image-updater-ssh-config
+          optional: true
+        name: ssh-config
+      - name: ssh-signing-key
+        secret:
+          defaultMode: 420
+          optional: true
+          secretName: ssh-git-creds
+      - emptyDir: {}
+        name: tmp
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2026-03-02T04:38:04Z"
+    lastUpdateTime: "2026-03-02T04:38:16Z"
+    message: ReplicaSet "argocd-image-updater-controller-7cb46779b4" has successfully
+      progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2026-03-02T06:51:30Z"
+    lastUpdateTime: "2026-03-02T06:51:30Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

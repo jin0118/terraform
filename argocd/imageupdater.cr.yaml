@@ -1,5 +1,6 @@
-# ArgoCD Image Updater Custom Resource 정의
-# argocd-image-updater가 관리할 이미지 업데이트 정책을 선언
+
+# ArgoCD Image Updater Custom Resource 정의: argocd-image-updater(Deployment)가 실제 행동
+# ECR 접근 권한은 argocd-image-updater(Deployment)의 ServiceAccount에 IRSA 설정
 apiVersion: argocd-image-updater.argoproj.io/v1alpha1
 kind: ImageUpdater
 metadata:
@@ -10,4 +11,5 @@ spec:
     - namePattern: "python-*"   # 대상 ArgoCD Application 이름 패턴 (glob 형식)
       images:
         - alias: "python-app"            # 이미지를 식별하는 별칭 (annotation 참조 시 사용)
-          imageName: "097600221977.dkr.ecr.ap-northeast-2.amazonaws.com/python-app:03021332"   # 업데이트를 감시할 컨테이너 이미지 이름과 태그 
+          imageName: "097600221977.dkr.ecr.ap-northeast-2.amazonaws.com/python-app:03021414"   # 업데이트를 감시할 컨테이너 이미지 이름과 태그 
+

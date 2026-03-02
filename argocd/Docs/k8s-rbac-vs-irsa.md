@@ -130,3 +130,92 @@ ECR / S3 등 AWS 서비스 접근 성공
 - **IRSA**: "이 Pod는 AWS에서 무엇을 할 수 있는가"
 
 두 권한이 모두 필요한 경우 **함께** 설정해야 한다.
+
+---
+
+## 트러블슈팅 — argocd-image-updater ECR 인증 실패
+
+### 증상
+
+```
+Could not get tags from registry: Get "https://<account>.dkr.ecr.<region>.amazonaws.com/v2/<image>/tags/list": no basic auth credentials
+```
+
+IRSA가 설정되어 있음에도 ECR 접근 시 basic auth 실패가 발생하는 경우.
+
+### 원인
+
+`argocd-image-updater-config` ConfigMap에 `registries.conf`가 없으면, controller가 ECR을 일반 registry로 인식하고 basic auth를 시도한다. IRSA로 AWS 자격증명이 주입되어 있어도 registry 설정이 없으면 사용되지 않는다.
+
+### 1단계 — IRSA 동작 확인
+
+```bash
+kubectl exec -n argocd deployment/argocd-image-updater-controller -- env | grep AWS
+```
+
+정상이면 아래 두 변수가 존재해야 한다:
+
+```
+AWS_ROLE_ARN=arn:aws:iam::<account>:role/<role-name>
+AWS_WEB_IDENTITY_TOKEN_FILE=/var/run/secrets/eks.amazonaws.com/serviceaccount/token
+```
+
+변수가 없으면 → EKS OIDC provider 및 IAM Trust Policy 확인 필요.
+
+### 2단계 — registries.conf 확인
+
+```bash
+kubectl get configmap argocd-image-updater-config -n argocd -o yaml
+```
+
+`data` 섹션이 비어 있거나 `registries.conf` 키가 없으면 아래로 진행.
+
+`registries.conf`가 없으면 controller는 이미지 이름만 보고 어떤 레지스트리인지, 어떻게 인증할지 알 수 없다. 결국 기본값인 Docker Hub 방식(basic auth)으로 시도하다 실패한다.
+
+```
+097600221977.dkr.ecr.ap-northeast-2.amazonaws.com/python-app
+        ↑ ECR인지 모름 → basic auth 시도 → 실패
+```
+
+`registries.conf`의 역할은 `prefix`로 이미지 이름을 매칭해 "이건 ECR이다"라고 인식시키고, ECR에 맞는 인증 방식(AWS SDK → IRSA 자격증명)을 사용하도록 하는 **라우팅 + 인증 설정**이다.
+
+### 3단계 — registries.conf 추가
+
+`registries.conf`는 YAML 형식이다. install YAML 파일의 ConfigMap에 `data` 섹션을 추가한다.
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-image-updater-config
+  namespace: argocd
+data:
+  registries.conf: |
+    registries:
+    - name: AWS ECR
+      api_url: https://<account>.dkr.ecr.<region>.amazonaws.com
+      prefix: <account>.dkr.ecr.<region>.amazonaws.com
+      credentials: ecr:<region>
+      credsexpire: 10h
+```
+
+`credentials: ecr:<region>`은 argocd-image-updater 빌트인 ECR 인증 방식으로, IRSA로 주입된 AWS 자격증명을 사용해 ECR 토큰을 자동 발급한다. `/scripts/ecr-login.sh` 같은 외부 스크립트가 필요 없다.
+
+> **주의:** TOML 형식(`[[registries]]`)은 파싱 에러가 발생한다. 반드시 YAML 형식을 사용한다.
+
+적용:
+
+```bash
+kubectl apply -f argocd-image-updater.install.yaml
+kubectl rollout restart deployment argocd-image-updater-controller -n argocd
+```
+
+### 판단 흐름
+
+```
+IRSA 환경변수 있음?
+  └─ No  → EKS OIDC provider / Trust Policy 확인
+  └─ Yes → registries.conf 설정 있음?
+              └─ No  → ConfigMap에 ECR registry 추가
+              └─ Yes → IAM Role 권한 정책(ecr:GetAuthorizationToken 등) 확인
+```

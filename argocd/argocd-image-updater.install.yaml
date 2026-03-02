@@ -773,6 +773,14 @@ metadata:
     app.kubernetes.io/name: argocd-image-updater-config
     app.kubernetes.io/part-of: argocd-image-updater-controller
   name: argocd-image-updater-config
+data:
+  # https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/#supported-registries
+  registries.conf: |
+    registries:
+    - name: AWS ECR
+      api_url: https://097600221977.dkr.ecr.ap-northeast-2.amazonaws.com
+      prefix: 097600221977.dkr.ecr.ap-northeast-2.amazonaws.com
+      credsexpire: 10h
 ---
 apiVersion: v1
 kind: ConfigMap
