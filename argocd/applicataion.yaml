@@ -8,7 +8,10 @@ spec:
   source:
     repoURL: https://github.com/jin0118/terraform.git
     targetRevision: HEAD
-    path: argocd/python-app/k8s
+    path: argocd/python-app/helm
+    helm:
+      valueFiles:
+        - values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: default
