@@ -1,0 +1,14 @@
+replicaCount: 1
+
+image:
+  repository: 097600221977.dkr.ecr.ap-northeast-2.amazonaws.com/python-app
+  tag: "03021332"
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+containerPort: 8080
+
+namespace: default
